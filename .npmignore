@@ -1,6 +1,10 @@
 node_modules
-demos/
-test/
+/demos
+/test
+/src
+
+index.ts
+
 .vscode
 .babelrc
 .gitignore
