@@ -65,7 +65,7 @@ export default class DBTable {
     });
   }
 
-  getAll(limit?: number): Promise<DBData[]> {
+  gets(limit?: number): Promise<DBData[]> {
     return new Promise((resolve, reject) => {
       this.db.getDB((idb) => {
         try {
@@ -124,7 +124,7 @@ export default class DBTable {
     });
   }
 
-  addS(data: DBInputData[]): Promise<DBData[]> {
+  adds(data: DBInputData[]): Promise<DBData[]> {
     return new Promise(async (resolve, reject) => {
       if (Array.isArray(data)) {
         const arr = [];

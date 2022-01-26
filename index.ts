@@ -75,11 +75,10 @@ export default class DB {
     }
   }
 
-  // drop a database
-  drop(): Promise<Event> {
+  delete(database?: string): Promise<Event> {
     return new Promise((resolve, reject) => {
 
-      const database = this.name;
+      database = database || this.name;
 
       this.close();
 
