@@ -1,5 +1,5 @@
 # DB
-indexedDB
+客户端 非关系型数据库 indexedDB
 
 ## 安装
 ```js
