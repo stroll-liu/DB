@@ -24,14 +24,6 @@ export type GetDBCallback = (idb: IDBDatabase) => void;
 
 export type TableFindFunction = (item?: DBData) => boolean;
 
-export type TableIndexTypes =
-  NumberConstructor
-  | StringConstructor
-  | BooleanConstructor
-  | DateConstructor
-  | ObjectConstructor
-  | ArrayConstructor;
-
 export interface TableIndex {
   multiEntry?: boolean
   unique?: boolean
@@ -44,7 +36,7 @@ export interface DBConfig {
 }
 
 export interface DBTableSchema {
-  [key: string]: TableIndex | TableIndexTypes
+  [key: string]: TableIndex
 }
 
 export interface DBSchema {

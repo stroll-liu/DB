@@ -17,7 +17,7 @@ export default class DBTable {
     this.db = db;
     this.name = name;
 
-    this.schema = schema || null;
+    this.schema = schema || {};
 
   }
 
@@ -127,7 +127,7 @@ export default class DBTable {
   adds(data: DBInputData[]): Promise<DBData[]> {
     return new Promise(async (resolve, reject) => {
       if (Array.isArray(data)) {
-        const arr = [];
+        const arr: any = [];
         for (let item of data) {
           arr.push(await this.add(item));
         }
@@ -202,7 +202,7 @@ export default class DBTable {
     });
   }
 
-  find(fn: TableFindFunction): Promise<DBData> {
+  find(fn: TableFindFunction): Promise<DBData | null> {
     return new Promise((resolve, reject) => {
       this.db.getDB((idb) => {
         try {
@@ -235,7 +235,7 @@ export default class DBTable {
             .transaction(this.name, 'readonly')
             .objectStore(this.name);
 
-          const data = [];
+          const data: any = [];
 
           store.openCursor().onsuccess = (e) => {
             const cursor = (e.target as IDBRequest).result;
