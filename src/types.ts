@@ -33,7 +33,6 @@ export type TableIndexTypes =
   | ArrayConstructor;
 
 export interface TableIndex {
-  type: TableIndexTypes
   multiEntry?: boolean
   unique?: boolean
   default?: any
