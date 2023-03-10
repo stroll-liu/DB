@@ -7,20 +7,19 @@ import {
   GetDBCallback,
   DBSchema
 } from './src/types';
-import { forEach } from 'lodash';
 
 export default class DB {
   name: string;
   version: number;
-  idb: IDBDatabase;
+  idb: IDBDatabase | null;
   tables: DBTableDict;
 
   private _closed: boolean;
-  private _connection: IDBOpenDBRequest;
+  private _connection: IDBOpenDBRequest | null;
   private _callbackQueue: Array<Function>;
 
   onOpened: Function;
-  onClosed: Function;
+  onClosed: Function | null;
 
   constructor(name: string, schema?: DBSchema, config?: DBConfig) {
 
@@ -100,7 +99,7 @@ export default class DB {
 
       deleteRequest.onerror = (ev) => {
         const { error } = ev.target as IDBOpenDBRequest;
-        const { name, message } = error;
+        const { name, message }: any = error;
         console.warn(
           `无法删除数据库['${database}']\
           \n- ${name}: ${message}`

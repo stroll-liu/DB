@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "ES2015",
+    "allowJs": false,
+    "declaration": true,
+    "target": "es5",
+    "lib": ["dom", "ES2015.Promise", "es5", "es6"],
+    "paths": {
+      "tslib" : ["./node_modules/tslib/tslib.d.ts"]
+    }
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
