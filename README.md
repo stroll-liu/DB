@@ -1,70 +1,53 @@
-# DB
-客户端 非关系型数据库 indexedDB
+# [来源](https://github.com/erikolson186/zangodb)
+## [完整文档](/docs/index.html)
+```javascript
+let db = new webdb.Db('mydb', { people: ['age'] });
+let people = db.collection('people');
 
-## 安装
-```js
-npm i -S @stroll/db
+let docs = [
+    { name: 'Frank', age: 20 },
+    { name: 'Thomas', age: 33 },
+    { name: 'Todd', age: 33 },
+    { name: 'John', age: 28 },
+    { name: 'Peter', age: 33 },
+    { name: 'George', age: 28 }
+];
+
+people.insert(docs).then(() => {
+    return people.find({
+        name: { $ne: 'John' },
+        age: { $gt: 20 }
+    }).group({
+        _id: { age: '$age' },
+        count: { $sum: 1 }
+    }).project({
+        _id: 0,
+        age: '$_id.age'
+    }).sort({
+        age: -1
+    }).forEach(doc => console.log('doc:', doc));
+}).catch(error => console.error(error));
 ```
-## 使用
-```js
-// 声明DB操作实例
-const testDB = new DB(
-  'testDB', // 库名称
-  { 
-    testTable: { // 表名
-      name: { // 可检索字段
-        // unique: true, // 是否为主键， 默认主键为 _id
-        // multiEntry: true, // true 为每个数组添加一个条目， false 添加一个包含数组的条目
-      },
-      age: {},
-      as: {}
-    }
-  }
-)
+## Document Language Operators
 
-// 表实例
-const testTable = testDB.table('testTable')
+### Filter Operators
 
-// 非关系型，可添加不同结构数据
-// 表数据添加
-testTable.add({ name: '123', age: 18, as: 'ss' })
-testTable.add({ name: 'lu', age: 19, t: '**:**' })
-// 多条表数据添加
-testTable.adds([
-  { name: 'li', age: 20, as: 'ss' },
-  { name: 'wang', age: 21, t: '**:**' }
-])
+The following filter operators are supported: `$and`, `$or`, `$not`, `$nor`, `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$elemMatch`, `$regex`, and `$exists`.
 
-// 删除数据(参数 _id)
-testTable.delete(_id)
+### Expression Operators
 
-// 修改数据
-testTable.put({ _id: 1, name: 'liu', age: 18, as: '666' })
+Expression operators can be used in combination with the group and projection operators.
 
-// 查询数据
-testTable.get({ name: 'lu' })
-// 查询数据(参数为查询条数)
-testTable.gets(10)
+The following expression operators are supported: `$literal`, `$add`, `$subtract`, `$multiply`, `$divide`, `$mod`, `$abs`, `$ceil`, `$floor`, `$ln`, `$log10`, `$pow`, `$sqrt`, `$trunc`, `$concat`, `$toLower`, `$toUpper`, `$concatArrays`, `$dayOfMonth`, `$year`, `$month`, `$hour`, `$minute`, `$second`, and `$millisecond`.
 
-// 获取表所有数据
-// 依次返回数据 返回结果为 Object
-testTable.find(data => {
-  console.log(data)
-})
-// 返回全部数据 返回结果为 Array
-testTable.findAll(arr => {
-  console.log(arr)
-})
+### Update Operators
 
-// 在控制台打印(参数为打印条数)
-userTable.console(100)
+The following update operators are supported: `$set`, `$unset`, `$rename`, `$inc`, `$mul`, `$min`, `$max`, `$push`, `$pop`, `$pullAll`, `$pull`, and `$addToSet`.
 
-// 关闭数据库
-testDB.close()
+### Group Operators
 
-// 删除数据库 databaseName 可不传
-testDB.delete(databaseName)
+The following group operators are supported: `$sum`, `$avg`, `$min`, `$max`, `$push`, and `$addToSet`.
 
-// 数据库状态
-const DBState = testDB.getDBState()
-```
+## Aggregation Pipeline Stages
+
+支持以下聚合管道阶段：“$match”、“$project”、“$group”、“$unwind”、“$sort”、“$skip”和“$limit”。
