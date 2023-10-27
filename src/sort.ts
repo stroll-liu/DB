@@ -1,8 +1,8 @@
-const {
+import {
     toPathPieces,
     isObject,
     equal
-} = require('./util.js');
+} from './util'
 
 const compare = (a, b, path_pieces, order) => {
     for (var i = 0; i < path_pieces.length - 1; i++) {
@@ -34,7 +34,7 @@ const compare = (a, b, path_pieces, order) => {
     return order;
 };
 
-module.exports = (_next, spec) => {
+export const sort = (_next, spec) => {
     const sorts = [];
 
     for (let path in spec) {
@@ -76,3 +76,5 @@ module.exports = (_next, spec) => {
 
     return cb => next(cb);
 };
+
+export default sort

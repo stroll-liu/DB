@@ -1,6 +1,6 @@
-const { toPathPieces, get } = require('./util.js');
+import { toPathPieces, get } from './util'
 
-module.exports = (_next, path) => {
+export const unwind = (_next, path) => {
     const path_pieces = toPathPieces(path.substring(1)),
           elements = [],
           fn = cb => cb(null, elements.pop());
@@ -36,3 +36,5 @@ module.exports = (_next, path) => {
 
     return cb => next(cb);
 };
+
+export default unwind

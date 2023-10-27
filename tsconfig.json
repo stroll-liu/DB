@@ -3,7 +3,7 @@
     "module": "ES2015",
     "allowJs": false,
     "declaration": true,
-    "target": "es5",
+    "target": "es2015",
     "lib": ["dom", "es2016"],
     "paths": {
       "tslib" : ["./node_modules/tslib/tslib.d.ts"]
