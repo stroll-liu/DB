@@ -1,4 +1,3 @@
-# [来源](https://github.com/erikolson186/zangodb)
 ## [完整文档](/docs/index.html)
 ```javascript
 let db = new webdb.Db('mydb', { people: ['age'] });
@@ -28,26 +27,26 @@ people.insert(docs).then(() => {
     }).forEach(doc => console.log('doc:', doc));
 }).catch(error => console.error(error));
 ```
-## Document Language Operators
+## 运算符
 
-### Filter Operators
+### 过滤器运算符
 
-The following filter operators are supported: `$and`, `$or`, `$not`, `$nor`, `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$elemMatch`, `$regex`, and `$exists`.
+支持以下过滤器运算符: `$and`, `$or`, `$not`, `$nor`, `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$elemMatch`, `$regex`, and `$exists`.
 
-### Expression Operators
+### 表达式运算符
 
-Expression operators can be used in combination with the group and projection operators.
+表达式运算符可以与群运算符和投影运算符结合使用。
 
-The following expression operators are supported: `$literal`, `$add`, `$subtract`, `$multiply`, `$divide`, `$mod`, `$abs`, `$ceil`, `$floor`, `$ln`, `$log10`, `$pow`, `$sqrt`, `$trunc`, `$concat`, `$toLower`, `$toUpper`, `$concatArrays`, `$dayOfMonth`, `$year`, `$month`, `$hour`, `$minute`, `$second`, and `$millisecond`.
+支持以下表达式运算符: `$literal`, `$add`, `$subtract`, `$multiply`, `$divide`, `$mod`, `$abs`, `$ceil`, `$floor`, `$ln`, `$log10`, `$pow`, `$sqrt`, `$trunc`, `$concat`, `$toLower`, `$toUpper`, `$concatArrays`, `$dayOfMonth`, `$year`, `$month`, `$hour`, `$minute`, `$second`, and `$millisecond`.
 
-### Update Operators
+### 更新运算符
 
-The following update operators are supported: `$set`, `$unset`, `$rename`, `$inc`, `$mul`, `$min`, `$max`, `$push`, `$pop`, `$pullAll`, `$pull`, and `$addToSet`.
+支持以下更新运算符: `$set`, `$unset`, `$rename`, `$inc`, `$mul`, `$min`, `$max`, `$push`, `$pop`, `$pullAll`, `$pull`, and `$addToSet`.
 
-### Group Operators
+### 组运算符
 
-The following group operators are supported: `$sum`, `$avg`, `$min`, `$max`, `$push`, and `$addToSet`.
+支持以下组运算符：: `$sum`, `$avg`, `$min`, `$max`, `$push`, and `$addToSet`.
 
-## Aggregation Pipeline Stages
+## 聚合管道阶段
 
 支持以下聚合管道阶段：“$match”、“$project”、“$group”、“$unwind”、“$sort”、“$skip”和“$limit”。
