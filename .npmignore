@@ -1,9 +1,7 @@
 node_modules
-/demos
+/docs
 /test
 /src
-
-index.ts
 
 .vscode
 .babelrc
