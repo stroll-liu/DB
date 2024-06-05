@@ -41,7 +41,7 @@ const GT: any = globalThis
  * // 定义没有索引的集合。
  * let db = new webdb.Db('mydb', ['col1', 'col2']);
  */
-export class Db extends EventEmitter {
+export class DB extends EventEmitter {
     private _cols: any
     private _config: any
     private _name: any
@@ -202,4 +202,4 @@ export class Db extends EventEmitter {
     }
 }
 
-export default {Db};
+export default DB;
