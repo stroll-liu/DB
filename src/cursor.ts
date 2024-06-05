@@ -34,7 +34,7 @@ export class Cursor extends EventEmitter {
   private _opened: any
   private _hint: any
   /** <strong>注意:</strong> 不要直接实例化. */
-  constructor(col, read_pref) {
+  constructor(col: any, read_pref: string) {
     super();
 
     this._col = col;
@@ -43,8 +43,8 @@ export class Cursor extends EventEmitter {
     this._next = this._init;
   }
 
-  _forEach(fn, cb) {
-    this._next((error, doc) => {
+  _forEach(fn: any, cb: any) {
+    this._next((error: any, doc: any) => {
       if (doc) {
         fn(doc);
         this.emit('forEachData', doc);
@@ -67,13 +67,13 @@ export class Cursor extends EventEmitter {
    *  console.log(docs)
    * });
    */
-  forEach(fn = (doc) => { }): Promise<unknown> {
+  forEach(fn = (doc: any) => { }): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      const docs = []
-      this._forEach((doc) => {
+      const docs: any = []
+      this._forEach((doc: any) => {
         fn(doc)
         docs.push(doc)
-      }, (error) => {
+      }, (error: any) => {
         if (error) reject(error)
       });
       this.on('forEachEnd', () => {
@@ -82,11 +82,11 @@ export class Cursor extends EventEmitter {
     })
   }
 
-  _toArray(cb) {
-    const docs = [];
-    this._forEach((doc) => {
+  _toArray(cb: any) {
+    const docs: any = [];
+    this._forEach((doc: any) => {
       docs.push(doc);
-    }, error => cb(error, docs));
+    }, (error: any) => cb(error, docs));
   }
 
   /**
@@ -99,7 +99,7 @@ export class Cursor extends EventEmitter {
    */
   toArray(): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      this._toArray((error, docs) => {
+      this._toArray((error: any, docs: unknown) => {
         if (error) reject(error);
         else resolve(docs);
       });
@@ -122,7 +122,7 @@ export class Cursor extends EventEmitter {
    * @example
    * col.find().hint('myindex');
    */
-  hint(path) {
+  hint(path: any) {
     this._assertUnopened();
     if (!this._col._isIndexed(path)) {
       throw Error(`index '${path}' does not exist`);
@@ -130,7 +130,7 @@ export class Cursor extends EventEmitter {
     this._hint = path;
     return this;
   }
-  _addStage(fn, arg) {
+  _addStage(fn: any, arg: any) {
     this._assertUnopened();
     this._pipeline.push([fn, arg]);
     return this;
@@ -144,7 +144,7 @@ export class Cursor extends EventEmitter {
    * @example
    * col.find().filter({ x: 4 });
    */
-  filter(expr) { return this._addStage(filter, expr); }
+  filter(expr: any) { return this._addStage(filter, expr); }
 
   /**
    * Limit the number of documents that can be iterated.
@@ -154,7 +154,7 @@ export class Cursor extends EventEmitter {
    * @example
    * col.find().limit(10);
    */
-  limit(num) { return this._addStage(limit, num); }
+  limit(num: any) { return this._addStage(limit, num); }
 
   /**
    * Skip over a specified number of documents.
@@ -164,7 +164,7 @@ export class Cursor extends EventEmitter {
    * @example
    * col.find().skip(4);
    */
-  skip(num) { return this._addStage(skip, num); }
+  skip(num: any) { return this._addStage(skip, num); }
 
   /**
    * Add new fields, and include or exclude pre-existing fields.
@@ -174,7 +174,7 @@ export class Cursor extends EventEmitter {
    * @example
    * col.find().project({ _id: 0, x: 1, n: { $add: ['$k', 4] } });
    */
-  project(spec) { return this._addStage(project, spec); }
+  project(spec: any) { return this._addStage(project, spec); }
 
   /**
    * Group documents by an _id and optionally add computed fields.
@@ -188,7 +188,7 @@ export class Cursor extends EventEmitter {
    *     count: { $sum: 1 }
    * });
    */
-  group(spec) { return this._addStage(group, spec); }
+  group(spec: any) { return this._addStage(group, spec); }
 
   /**
    * Deconstruct an iterable and output a document for each element.
@@ -198,7 +198,7 @@ export class Cursor extends EventEmitter {
    * @example
    * col.find().unwind('$elements');
    */
-  unwind(path) { return this._addStage(unwind, path); }
+  unwind(path: any) { return this._addStage(unwind, path); }
 
   /**
    * Sort documents.
@@ -222,9 +222,9 @@ export class Cursor extends EventEmitter {
    * // If x is indexed, it will be used for sorting.
    * col.find().sort({ x: 1 }).hint('x');
    */
-  sort(spec) { return this._addStage(sort, spec); }
+  sort(spec: any) { return this._addStage(sort, spec); }
 
-  _init(cb) {
+  _init(cb: any) {
     this._opened = true;
     this._next = createNextFn(this);
     this._next(cb);

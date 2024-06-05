@@ -1,14 +1,27 @@
 {
+  "include": ["src/**/*", "**/*.ts", "index.d.ts"],
+  "exclude": ["node_modules", "lib"],
+  "ts-node": { "esm": true },
   "compilerOptions": {
-    "module": "ES2015",
-    "allowJs": false,
+    "module": "commonjs",
+    "target": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
     "declaration": true,
-    "target": "es2015",
-    "lib": ["dom", "es2016"],
+    "lib": ["ESNext"],
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "outDir": "./lib",
+    "declarationDir": "./lib",
+    "declarationMap": false,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "emitDeclarationOnly": false,
+    "newLine": "crlf",
+    "skipLibCheck": true,
     "paths": {
-      "tslib" : ["./node_modules/tslib/tslib.d.ts"]
+      "@": ["./src"], 
     }
   },
-  "include": ["./**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
 }

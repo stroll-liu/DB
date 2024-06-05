@@ -8,7 +8,9 @@ import MISSING from './missing_symbol'
 import Path from './path'
 import Fields from './fields'
 
-export const isIndexMatchable = (value) => {
+const GT: any = globalThis
+
+export const isIndexMatchable = (value: any) => {
   if (typeof value === 'number') { return !isNaN(value); }
   if (typeof value === 'string') { return true; }
   if (typeof value === 'boolean') { return true; }
@@ -40,7 +42,7 @@ export class Operator {
 
 export class Connective extends Operator {
   args: any;
-  constructor(args) {
+  constructor(args: any) {
     super();
 
     this.args = args;
@@ -67,7 +69,7 @@ export class Conjunction extends Connective {
     return clauses;
   }
 
-  run(fields) {
+  run(fields: any) {
     for (let arg of this.args) {
       if (!arg.run(fields)) { return false; }
     }
@@ -79,7 +81,7 @@ export class Conjunction extends Connective {
 export class Disjunction extends Connective {
   getClauses() { return []; }
 
-  run(fields) {
+  run(fields: any) {
     for (let arg of this.args) {
       if (arg.run(fields)) { return true; }
     }
@@ -91,13 +93,13 @@ export class Disjunction extends Connective {
 export class Negation extends Conjunction {
   getClauses() { return []; }
 
-  run(fields) { return !super.run(fields); }
+  run(fields: any) { return !super.run(fields); }
 }
 
 export class Exists extends Operator {
   path: any;
   bool: any;
-  constructor(path, bool) {
+  constructor(path: any, bool: any) {
     super();
 
     this.path = path;
@@ -106,7 +108,7 @@ export class Exists extends Operator {
 
   get is_index_matchable() { return !!this.bool; }
 
-  run(fields) {
+  run(fields: any) {
     return fields.get(this.path) !== MISSING === this.bool;
   }
 }
@@ -114,7 +116,7 @@ export class Exists extends Operator {
 export class Equal extends Operator {
   path: any;
   value: any;
-  constructor(path, value) {
+  constructor(path: any, value: any) {
     super();
 
     this.path = path;
@@ -126,10 +128,10 @@ export class Equal extends Operator {
   }
 
   get idb_key_range() {
-    return IDBKeyRange.only(this.value);
+    return GT.IDBKeyRange.only(this.value);
   }
 
-  run(fields) {
+  run(fields: any) {
     const value = fields.get(this.path);
     if (value === MISSING) { return false; }
 
@@ -140,14 +142,14 @@ export class Equal extends Operator {
 export class NotEqual extends Equal {
   get is_index_matchable() { return false; }
 
-  run(fields) { return !super.run(fields); }
+  run(fields: any) { return !super.run(fields); }
 }
 
 export class Range extends Operator {
   path: any;
   fns: any;
   values: any;
-  constructor(path, fns, values) {
+  constructor(path: any, fns: any, values: any) {
     super();
 
     this.path = path;
@@ -157,7 +159,7 @@ export class Range extends Operator {
 
   get is_index_matchable() { return true; }
 
-  run(fields) {
+  run(fields: any) {
     const value = fields.get(this.path);
 
     if (value === MISSING || value == null) {
@@ -176,77 +178,77 @@ export class Range extends Operator {
   }
 }
 
-export const rangeMixin = (...fns) => {
+export const rangeMixin = (...fns: any) => {
   return class extends Range {
-    constructor(path, values) { super(path, fns, values); }
+    constructor(path: any, values: any) { super(path, fns, values); }
   };
 };
 
-export const gt = (a, b) => a > b,
-  gte = (a, b) => a >= b,
-  lt = (a, b) => a < b,
-  lte = (a, b) => a <= b;
+export const gt = (a: any, b: any) => a > b,
+  gte = (a: any, b: any) => a >= b,
+  lt = (a: any, b: any) => a < b,
+  lte = (a: any, b: any) => a <= b;
 
   export class Gt extends rangeMixin(gt) {
-  values: any;
+  declare values: any;
   get idb_key_range() {
-    return IDBKeyRange.lowerBound(...this.values, true);
+    return GT.IDBKeyRange.lowerBound(...this.values, true);
   }
 }
 
 export class Gte extends rangeMixin(gte) {
-  values: any;
+  declare values: any;
   get idb_key_range() {
-    return IDBKeyRange.lowerBound(...this.values);
+    return GT.IDBKeyRange.lowerBound(...this.values);
   }
 }
 
 export class Lt extends rangeMixin(lt) {
-  values: any;
+  declare values: any;
   get idb_key_range() {
-    return IDBKeyRange.upperBound(...this.values, true);
+    return GT.IDBKeyRange.upperBound(...this.values, true);
   }
 }
 
 export class Lte extends rangeMixin(lte) {
-  values: any;
+  declare values: any;
   get idb_key_range() {
-    return IDBKeyRange.upperBound(...this.values);
+    return GT.IDBKeyRange.upperBound(...this.values);
   }
 }
 
 export class GtLt extends rangeMixin(gt, lt) {
-  values: any;
+  declare values: any;
   get idb_key_range() {
-    return IDBKeyRange.bound(...this.values, true, true);
+    return GT.IDBKeyRange.bound(...this.values, true, true);
   }
 }
 
 export class GteLt extends rangeMixin(gte, lt) {
-  values: any;
+  declare values: any;
   get idb_key_range() {
-    return IDBKeyRange.bound(...this.values, false, true);
+    return GT.IDBKeyRange.bound(...this.values, false, true);
   }
 }
 
 export class GtLte extends rangeMixin(gt, lte) {
-  values: any;
+  declare values: any;
   get idb_key_range() {
-    return IDBKeyRange.bound(...this.values, true, false);
+    return GT.IDBKeyRange.bound(...this.values, true, false);
   }
 }
 
 export class GteLte extends rangeMixin(gte, lte) {
-  values: any;
+  declare values: any;
   get idb_key_range() {
-    return IDBKeyRange.bound(...this.values);
+    return GT.IDBKeyRange.bound(...this.values);
   }
 }
 
 export class ElemMatch extends Operator {
   path: any;
   op: any;
-  constructor(path, op) {
+  constructor(path: any, op: any) {
     super();
 
     this.path = path;
@@ -255,7 +257,7 @@ export class ElemMatch extends Operator {
 
   get is_index_matchable() { return false; }
 
-  run(fields) {
+  run(fields: any) {
     const elements = fields.get(this.path);
 
     if (!elements || !elements[Symbol.iterator]) {
@@ -277,7 +279,7 @@ export class ElemMatch extends Operator {
 export class RegEx extends Operator {
   path: any;
   expr: any;
-  constructor(path, expr) {
+  constructor(path: any, expr: any) {
     super();
 
     this.path = path;
@@ -286,7 +288,7 @@ export class RegEx extends Operator {
 
   get is_index_matchable() { return false; }
 
-  run(fields) {
+  run(fields: any) {
     const value = fields.get(this.path);
     if (value === MISSING) { return false; }
 
@@ -294,7 +296,7 @@ export class RegEx extends Operator {
   }
 }
 
-export const $and = (parent_args, args) => {
+export const $and = (parent_args: any, args: any) => {
   for (let expr of args) {
     const arg = build(expr);
 
@@ -309,7 +311,7 @@ export const $and = (parent_args, args) => {
   return true;
 };
 
-export const $or = (parent_args, args) => {
+export const $or = (parent_args: any, args: any) => {
   const new_args = [];
 
   let has_false;
@@ -337,7 +339,7 @@ export const $or = (parent_args, args) => {
   return true;
 };
 
-export const $not = (parent_args, args) => {
+export const $not = (parent_args: any, args: any) => {
   const new_args = [];
 
   for (let expr of args) {
@@ -353,14 +355,14 @@ export const $not = (parent_args, args) => {
   return true;
 };
 
-export const connectives = {
+export const connectives: any = {
   $and,
   $or,
   $not,
   $nor: $not
 };
 
-export const ranges = [
+export const ranges: any = [
   [GtLt, '$gt', '$lt'],
   [GteLt, '$gte', '$lt'],
   [GtLte, '$gt', '$lte'],
@@ -371,8 +373,8 @@ export const ranges = [
   [Lte, '$lte']
 ];
 
-export const buildRange = (new_args, path, params, op_keys) => {
-  const build = (RangeOp, range_keys) => {
+export const buildRange = (new_args: any, path: any, params: any, op_keys: any) => {
+  const build = (RangeOp: any, range_keys: any) => {
     const values = [];
 
     for (let name of range_keys) {
@@ -406,7 +408,7 @@ export const buildRange = (new_args, path, params, op_keys) => {
   return true;
 };
 
-export const buildClause = (parent_args, path, params) => {
+export const buildClause = (parent_args: any, path: any, params: any) => {
   const withoutOps = () => {
     parent_args.push(new Equal(path, params));
 
@@ -499,8 +501,8 @@ export const buildClause = (parent_args, path, params) => {
   return true;
 };
 
-export const build = (expr) => {
-  const args = [];
+export const build = (expr: any) => {
+  const args: any = [];
 
   for (let field in expr) {
     let value = expr[field], result;

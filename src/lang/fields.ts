@@ -1,16 +1,16 @@
-import * as memoize from 'memoizee'
+import memoize from 'memoizee';
 
 import { get } from '../util'
 import MISSING from './missing_symbol'
 
 export class Fields {
   _doc: any;
-  constructor(doc) {
+  constructor(doc: any) {
     this._doc = doc;
     this.get = memoize(this.get);
   }
 
-  get(path) {
+  get(path: { pieces: string | any[]; }) {
     let value = MISSING;
     get(this._doc, path.pieces, (obj, field) => {
       value = obj[field];
@@ -18,7 +18,7 @@ export class Fields {
     return value;
   }
 
-  ensure(paths) {
+  ensure(paths: any) {
     for (let path of paths) {
       if (this.get(path) === MISSING) {
         return false;

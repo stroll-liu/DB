@@ -3,6 +3,8 @@ import { EventEmitter } from 'events'
 import { getIDBError } from './util'
 import Collection from './collection'
 
+const GT: any = globalThis
+
 /**
  * 数据库被阻止事件。
  * @event Db#blocked
@@ -45,8 +47,8 @@ export class Db extends EventEmitter {
     private _name: any
     private _version: any
     private _idb: any
-    private _open: boolean
-    constructor(name, version, config) {
+    private _open: boolean | undefined
+    constructor(name: any, version: any, config: { [x: string]: any }) {
         super();
         this._name = name;
         if (typeof version === 'object') { config = version; }
@@ -69,18 +71,18 @@ export class Db extends EventEmitter {
      * 数据库的名称。
      * @type {string}
      */
-    get name() { return this.name; }
+    get name(): any { return this.name; }
     /**
      * 数据库的版本。
      * @type {number}
      */
-    get version() { return this.version; }
+    get version(): any { return this.version; }
 
-    _addCollection(name) {
+    _addCollection(name: string) {
         this._cols[name] = new Collection(this, name);
     }
 
-    _addIndex(index_config, path) {
+    _addIndex(index_config: { [x: string]: any }, path: string) {
         const config = this._config;
         if (!index_config) { return config[path] = false; }
         if (typeof index_config !== 'object') {
@@ -88,7 +90,7 @@ export class Db extends EventEmitter {
         }
         const col = this._cols[path];
         if (Array.isArray(index_config)) {
-            const new_value = {};
+            const new_value: any = {};
             for (let index_path of index_config) {
                 new_value[index_path] = true;
                 col._indexes.add(index_path);
@@ -104,7 +106,7 @@ export class Db extends EventEmitter {
         }
     }
 
-    _addStore(idb, name) {
+    _addStore(idb: { createObjectStore: (arg0: any, arg1: { keyPath: string; autoIncrement: boolean }) => any }, name: string) {
         const store = idb.createObjectStore(name, {
             keyPath: '_id',
             autoIncrement: true
@@ -121,18 +123,18 @@ export class Db extends EventEmitter {
         return new Promise((resolve, reject) => {
             let req;
             if (this._version) {
-                req = indexedDB.open(this._name, this._version);
-            } else { req = indexedDB.open(this._name); }
+                req = GT.indexedDB.open(this._name, this._version);
+            } else { req = GT.indexedDB.open(this._name); }
 
-            req.onsuccess = (e) => {
+            req.onsuccess = (e: { target: { result: any } }) => {
                 const idb = e.target.result;
                 this._idb = idb;
                 this._version = idb.version;
                 this._open = true;
                 resolve(idb);
             };
-            req.onerror = e => reject(getIDBError(e));
-            req.onupgradeneeded = (e) => {
+            req.onerror = (e: any) => reject(getIDBError(e));
+            req.onupgradeneeded = (e: { target: { result: any } }) => {
                 const idb = e.target.result;
                 for (let name in this._config) {
                     try {
@@ -193,9 +195,9 @@ export class Db extends EventEmitter {
     async drop(): Promise<unknown> {
         await this.close();
         return new Promise((resolve, reject) => {
-            const req = indexedDB.deleteDatabase(this._name);
+            const req = GT.indexedDB.deleteDatabase(this._name);
             req.onsuccess = () => resolve(true);
-            req.onerror = e => reject(getIDBError(e));
+            req.onerror = (e: any) => reject(getIDBError(e));
         })
     }
 }

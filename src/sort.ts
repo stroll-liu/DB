@@ -4,7 +4,7 @@ import {
     equal
 } from './util'
 
-const compare = (a, b, path_pieces, order) => {
+const compare = (a: any, b: any, path_pieces: any, order: any) => {
     for (var i = 0; i < path_pieces.length - 1; i++) {
         const piece = path_pieces[i];
 
@@ -34,14 +34,14 @@ const compare = (a, b, path_pieces, order) => {
     return order;
 };
 
-export const sort = (_next, spec) => {
-    const sorts = [];
+export const sort = (_next: any, spec: any) => {
+    const sorts: any = [];
 
     for (let path in spec) {
         sorts.push([toPathPieces(path), spec[path]]);
     }
 
-    const sortFn = (a, b) => {
+    const sortFn = (a: any, b: any) => {
         for (var [path_pieces, order] of sorts) {
             const result = compare(a, b, path_pieces, order);
 
@@ -51,12 +51,12 @@ export const sort = (_next, spec) => {
         return -order;
     };
 
-    let docs = [];
+    let docs: any = [];
 
-    const fn = cb => cb(null, docs.pop());
+    const fn = (cb: any) => cb(null, docs.pop());
 
-    let next = (cb) => {
-        const done = (error) => {
+    let next = (cb: any) => {
+        const done = (error: any) => {
             if (error) { return cb(error); }
 
             docs = docs.sort(sortFn);
@@ -65,7 +65,7 @@ export const sort = (_next, spec) => {
         };
 
         (function iterate() {
-            _next((error, doc) => {
+            _next((error: any, doc: any) => {
                 if (!doc) { return done(error); }
 
                 docs.push(doc);
@@ -74,7 +74,7 @@ export const sort = (_next, spec) => {
         })();
     };
 
-    return cb => next(cb);
+    return (cb: any) => next(cb);
 };
 
 export default sort

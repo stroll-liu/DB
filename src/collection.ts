@@ -5,7 +5,7 @@ import update from './update'
 import remove from './remove'
 
 /** 代表集合的类。 */
-class Collection {
+export class Collection {
   private _db: any
   private _name: string
   private _indexes: Set<unknown>
@@ -22,7 +22,7 @@ class Collection {
    */
   get name() { return this._name; }
 
-  _isIndexed(path) {
+  _isIndexed(path: unknown) {
     return this._indexes.has(path) || path === '_id';
   }
 
@@ -37,7 +37,7 @@ class Collection {
    *    console.log(res)
    * });
    */
-  find(expr, projection_spec): Promise<Cursor> {
+  find(expr: any, projection_spec: any): Promise<Cursor> {
     return new Promise((resolve, reject) => {
       try {
         const cur = new Cursor(this, 'readonly');
@@ -61,7 +61,7 @@ class Collection {
    *    console.log(res)
    * });
    */
-  async findOne(expr, projection_spec): Promise<unknown|Error> {
+  async findOne(expr: any, projection_spec: any): Promise<unknown|Error> {
     const cur = await this.find(expr, projection_spec).then((cur) => {
       return cur.limit(1)
     })
@@ -80,9 +80,9 @@ class Collection {
    *     { $unwind: '$array' }
    * ]);
    */
-  aggregate(pipeline): Promise<Cursor> { return aggregate(this, pipeline); }
+  aggregate(pipeline: any): Promise<Cursor> { return aggregate(this, pipeline); }
 
-  _validate(doc) {
+  _validate(doc: { [x: string]: any }) {
     for (let field in doc) {
       if (field[0] === '$') {
         throw Error("字段名称不能以以下内容开头 '$'");
@@ -112,16 +112,16 @@ class Collection {
    *    console.log(res)
    * });
    */
-  insert(docs): Promise<unknown> {
+  insert(docs: string | any[]): Promise<unknown> {
     if (!Array.isArray(docs)) { docs = [docs]; }
     return new Promise((resolve, reject) => {
-      this._db._getConn((error, idb) => {
+      this._db._getConn((_error: any, idb: { transaction: (arg0: string[], arg1: string) => any }) => {
         let trans;
         const name = this._name;
         try { trans = idb.transaction([name], 'readwrite'); }
         catch (error) { return reject(error); }
         trans.oncomplete = () => resolve(true);
-        trans.onerror = e => reject(getIDBError(e));
+        trans.onerror = (e: any) => reject(getIDBError(e));
         const store = trans.objectStore(name);
         let i = 0;
         const iterate = () => {
@@ -139,11 +139,11 @@ class Collection {
     })
   }
 
-  _modify(fn, expr) {
+  _modify(fn: any, expr: any) {
     return new Promise((resolve, reject) => {
       const cur = new Cursor(this, 'readwrite');
       cur.filter(expr);
-      fn(cur, (error) => {
+      fn(cur, (error: any) => {
         if (error) reject(error);
         else resolve(true);
       });
@@ -166,8 +166,8 @@ class Collection {
    *     if (error) { throw error; }
    * });
    */
-  update(expr, spec) {
-    const fn = (cur, cb) => update(cur, spec, cb);
+  update(expr: any, spec: any) {
+    const fn = (cur: any, cb: any) => update(cur, spec, cb);
     return this._modify(fn, expr);
   }
 
@@ -182,9 +182,9 @@ class Collection {
    *     if (error) { throw error; }
    * });
    */
-  remove(expr) {
+  remove(expr: any) {
     return this._modify(remove, expr);
   }
 }
 
-module.exports = Collection;
+export default Collection;

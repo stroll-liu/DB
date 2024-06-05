@@ -1,11 +1,11 @@
 import { toPathPieces, get } from './util'
 
-export const unwind = (_next, path) => {
+export const unwind = (_next: any, path: any) => {
     const path_pieces = toPathPieces(path.substring(1)),
-          elements = [],
-          fn = cb => cb(null, elements.pop());
+          elements: any = [],
+          fn = (cb: any) => cb(null, elements.pop());
 
-    const onDoc = (doc, cb) => {
+    const onDoc = (doc: any, cb: any) => {
         const old_length = elements.length;
 
         get(doc, path_pieces, (obj, field) => {
@@ -26,15 +26,15 @@ export const unwind = (_next, path) => {
         fn(cb);
     };
 
-    let next = (cb) => {
-        _next((error, doc) => {
+    let next = (cb: any) => {
+        _next((error: any, doc: any) => {
             if (error) { cb(error); }
             else if (doc) { onDoc(doc, cb); }
             else { (next = fn)(cb); }
         });
     };
 
-    return cb => next(cb);
+    return (cb: any) => next(cb);
 };
 
 export default unwind
